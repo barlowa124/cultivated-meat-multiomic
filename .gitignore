@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+*.pyo
+*.npy
+*.pkl
+output/
+*.png
+*.jpg
+.env
+*.token
+*.pickle
+D:/
+shared_data/data_paths.yaml
