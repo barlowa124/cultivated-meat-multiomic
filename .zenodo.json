@@ -1,0 +1,41 @@
+{
+  "title": "A Multi-Omic Manufacturing-Readiness State Map for Cultivated Meat: Derivation of a 30-Gene qPCR Quality Control Panel",
+  "description": "Multi-omic state map integrating RNA-seq transcriptomics and METAFlux metabolic flux predictions across 239 samples, defining three manufacturing readiness states. A 30-gene L1-regularized logistic regression panel achieves 96.7% cross-validation accuracy. Cross-species validation in bovine (GSE173199) and porcine (GSE206914), single-nucleus RNA-seq validation (GSE240556, 17,541 nuclei), VAE embeddings, Bayesian Gaussian mixture modeling, transcription factor enrichment (JASPAR), protein-protein interaction network (STRING), SHAP explainability, bootstrap stability analysis, and ML model comparison.",
+  "creators": [
+    {
+      "name": "Rao Lab",
+      "affiliation": "North Carolina State University"
+    }
+  ],
+  "keywords": [
+    "cultivated meat",
+    "stem cells",
+    "multi-omics",
+    "quality control",
+    "RNA-seq",
+    "metabolic flux",
+    "biomarker panel",
+    "qPCR",
+    "cross-species",
+    "machine learning",
+    "single-nucleus RNA-seq",
+    "Bayesian modeling",
+    "transcription factor",
+    "protein-protein interaction"
+  ],
+  "license": "MIT",
+  "upload_type": "software",
+  "access_right": "open",
+  "related_identifiers": [
+    {
+      "relation": "isSupplementTo",
+      "identifier": "https://github.com/barlowa124/cultivated-meat-multiomic"
+    }
+  ],
+  "references": [
+    "GSE267112",
+    "GSE173199",
+    "GSE240556",
+    "GSE206914"
+  ]
+}
