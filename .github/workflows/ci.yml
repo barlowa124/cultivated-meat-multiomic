@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest flake8 black mypy
+      - name: Lint with flake8
+        run: flake8 notebooks/ --count --select=E9,F63,F7,F82 --show-source --statistics
+      - name: Format check with black
+        run: black --check notebooks/ || true
+      - name: Type check with mypy
+        run: mypy notebooks/ --ignore-missing-imports || true
+      - name: Run tests
+        run: pytest tests/ -v --tb=short
+      - name: Verify API artifacts exist
+        run: |
+          test -f api/model.pkl
+          test -f api/scaler.pkl
+          test -f api/model_metadata.json
+          test -f api/app.py
+      - name: Test API import
+        run: |
+          cd api
+          python -c "import app; print('API imports OK')"
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker image
+        run: docker build -t cultivated-meat-multiomic .
+      - name: Verify Docker image
+        run: docker run --rm cultivated-meat-multiomic --version || true
