@@ -25,6 +25,8 @@ jobs:
         run: black --check notebooks/ || true
       - name: Type check with mypy
         run: mypy notebooks/ --ignore-missing-imports || true
+      - name: Generate CI fixtures
+        run: python ci_fixtures.py
       - name: Run tests
         run: pytest tests/ -v --tb=short
       - name: Verify API artifacts exist
