@@ -1,0 +1,1 @@
+{"shap": {"top_genes": ["LMNA", "PLOD1", "C1QBP"]}, "dnn": {"cv_mean": 0.967, "cv_std": 0.012}}

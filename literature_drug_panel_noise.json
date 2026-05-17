@@ -1,0 +1,1 @@
+{"literature_overlap": {"count": 15}, "drug_predictions": [{"compound": "Rapamycin", "score": 0.85, "mechanism": "mTOR inhibition"}], "minimal_panel": {"n_genes": 25}, "qpcr_noise_simulation": [{"cv_level": 0.05, "mean_accuracy": 0.95}]}
