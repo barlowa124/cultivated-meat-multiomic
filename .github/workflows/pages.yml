@@ -1,0 +1,73 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
+
+      - name: Generate CI fixtures
+        run: python ci_fixtures.py
+
+      - name: Build static dashboard
+        run: |
+          mkdir -p _site
+          cp README.md _site/
+          cp MODEL_CARD.md _site/
+          cp CITATION.cff _site/
+          cp -r p2_state_map/output/*.json _site/ 2>/dev/null || true
+          cp dashboard.html _site/ 2>/dev/null || true
+          cp -r figures _site/ 2>/dev/null || true
+          # Generate a simple index page
+          python -c "
+          import json, pathlib
+          out = pathlib.Path('_site')
+          files = sorted([f.name for f in out.iterdir()])
+          html = '<!DOCTYPE html><html><head><meta charset=utf-8><title>Cultivated Meat QC Panel</title><style>body{font-family:sans-serif;max-width:800px;margin:40px auto;padding:0 20px}h1{color:#2c3e50}a{display:block;padding:8px 0;color:#2980b9}</style></head><body><h1>🧬 Cultivated Meat 30-Gene QC Panel</h1><p>Multi-omic quality control for cultivated muscle tissue manufacturing.</p><h2>Artifacts</h2>' + ''.join(f'<a href=\"{f}\">{f}</a>' for f in files if f != 'index.html') + '<h2>Links</h2><a href=\"https://github.com/barlowa124/cultivated-meat-multiomic\">GitHub Repository</a></body></html>'
+          (out / 'index.html').write_text(html, encoding='utf-8')
+          "
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '_site'
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
